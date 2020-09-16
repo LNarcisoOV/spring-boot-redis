@@ -13,7 +13,6 @@ import com.example.cache.repository.UserRepository;
 public class UserRepositoryImpl implements UserRepository {
 
 	private static final String USER_CACHE_KEY = "USER_CACHE_KEY";
-	private static final String USER_HASH_KEY = "user";
 
 	private HashOperations<String, String, User> hashOperations;
 
@@ -23,7 +22,7 @@ public class UserRepositoryImpl implements UserRepository {
 
 	@Override
 	public void save(User user) {
-		hashOperations.put(USER_CACHE_KEY, USER_HASH_KEY, user);
+		hashOperations.put(USER_CACHE_KEY, user.getId(), user);
 	}
 
 	@Override
