@@ -2,7 +2,6 @@ package com.example.cache.repository.impl;
 
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
@@ -14,19 +13,17 @@ import com.example.cache.repository.UserRepository;
 public class UserRepositoryImpl implements UserRepository {
 
 	private static final String USER_CACHE_KEY = "USER_CACHE_KEY";
+	private static final String USER_HASH_KEY = "user";
 
-	private RedisTemplate<String, User> redisTemplate;
-
-	private HashOperations hashOperations;
+	private HashOperations<String, String, User> hashOperations;
 
 	public UserRepositoryImpl(RedisTemplate<String, User> redisTemplate) {
-		this.redisTemplate = redisTemplate;
 		this.hashOperations = redisTemplate.opsForHash();
 	}
 
 	@Override
 	public void save(User user) {
-		hashOperations.put(USER_CACHE_KEY, user.getId(), user);
+		hashOperations.put(USER_CACHE_KEY, USER_HASH_KEY, user);
 	}
 
 	@Override
@@ -36,7 +33,7 @@ public class UserRepositoryImpl implements UserRepository {
 
 	@Override
 	public User findById(String id) {
-		return (User) hashOperations.get(USER_CACHE_KEY, id);
+		return hashOperations.get(USER_CACHE_KEY, id);
 	}
 
 	@Override
